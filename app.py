@@ -1,22 +1,25 @@
+# mundane imports
 import uvicorn
+from typing import Annotated
+
+# fastapi imports
 from fastapi import FastAPI, Request, Form
 from fastapi.responses import HTMLResponse
-from pydantic import BaseModel
-from typing import Annotated
 from fastapi.staticfiles import StaticFiles
-
-from bark import SAMPLE_RATE, generate_audio, preload_models
-from scipy.io.wavfile import write as write_wav
 from fastapi.templating import Jinja2Templates
 
+# repo specific
+from bark import SAMPLE_RATE, generate_audio, preload_models
+from scipy.io.wavfile import write as write_wav
+
+
+# ---- setting up App ----
 output_path = "static/mp3/out.wav"
 app = FastAPI()
 templates = Jinja2Templates(directory="static")
 app.mount("/static", StaticFiles(directory="static"), name="static")
 
-class Text(BaseModel):
-    input_prompt: str
-
+# --- Routes ---
 @app.post("/predict", response_class = HTMLResponse)
 async def predict(request: Request, input_text: Annotated[str, Form(...)]):
     audio_array = generate_audio(input_text)
