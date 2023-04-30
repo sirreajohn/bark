@@ -15,7 +15,7 @@ from scipy.io.wavfile import write
 # ---- setting up App ----
 output_path = "static/mp3/out.wav"
 app = FastAPI()
-preload_models(text_use_gpu = False, coarse_use_gpu = False, fine_use_gpu = False, codec_use_gpu = False)
+preload_models()
 
 
 def remove_file(path: str) -> None:
@@ -31,5 +31,5 @@ async def root(input_text: str, background_tasks: BackgroundTasks):
     return FileResponse(output_path, media_type='audio/mp3', filename="out.wav")
 
 if __name__ == "__main__":
-    uvicorn.run("test:app", host = "127.0.0.1", port = 9000, reload = True)
+    uvicorn.run("app:app", host = "0.0.0.0", port = 9000, reload = True)
 	
